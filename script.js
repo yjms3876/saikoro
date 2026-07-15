@@ -145,6 +145,29 @@ function playSuccessSound() {
   });
 }
 
+function playFanfareSound() {
+  const ctx = ensureAudioContext();
+  if (!ctx) {
+    return;
+  }
+
+  const notes = [659.25, 783.99, 1046.5, 1318.51];
+  notes.forEach((freq, index) => {
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const startTime = ctx.currentTime + 0.25 + index * 0.14;
+    oscillator.type = "triangle";
+    oscillator.frequency.setValueAtTime(freq, startTime);
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.exponentialRampToValueAtTime(0.08, startTime + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.24);
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+    oscillator.start(startTime);
+    oscillator.stop(startTime + 0.24);
+  });
+}
+
 function playFailureSound() {
   const ctx = ensureAudioContext();
   if (!ctx) {
@@ -169,37 +192,39 @@ function playFailureSound() {
   });
 }
 
-function showPredictionButtons() {
-  predictionButtons.classList.remove("hidden");
-}
-
-function hidePredictionButtons() {
-  predictionButtons.classList.add("hidden");
-}
-
-function showRoundButtons() {
-  roundButtons.classList.remove("hidden");
-}
-
-function hideRoundButtons() {
-  roundButtons.classList.add("hidden");
-}
-
 function updateStreak() {
   streakEl.textContent = streak.toString();
+}
+
+function updatePredictionButtons() {
+  const buttons = predictionButtons.querySelectorAll("button[data-choice]");
+  buttons.forEach((button) => {
+    button.disabled = !awaitingPrediction || baselineValue === null;
+  });
+}
+
+function updateRoundButtons() {
+  const canUseRoundActions = streak > 0 && streak < 3 && baselineValue !== null && !awaitingPrediction;
+  nextRoundBtn.disabled = !canUseRoundActions;
+  stopBtn.disabled = !canUseRoundActions;
+}
+
+function updateButtonStates() {
+  quitBtn.disabled = baselineValue === null && streak === 0 && !awaitingPrediction;
+  updatePredictionButtons();
+  updateRoundButtons();
 }
 
 function resetToInitial() {
   streak = 0;
   baselineValue = null;
   awaitingPrediction = false;
-  hidePredictionButtons();
-  hideRoundButtons();
   startBtn.disabled = false;
-  quitBtn.disabled = false;
+  quitBtn.disabled = true;
   setDieFace(baselineDieEl, "?");
   setDieFace(currentDieEl, "?");
   updateStreak();
+  updateButtonStates();
   statusEl.textContent = "スタートを押して、最初のサイコロを振ろう。";
 }
 
@@ -228,8 +253,6 @@ async function startNewGame() {
   streak = 0;
   baselineValue = null;
   awaitingPrediction = false;
-  hideRoundButtons();
-  hidePredictionButtons();
   startBtn.disabled = true;
   quitBtn.disabled = true;
   updateStreak();
@@ -241,10 +264,10 @@ async function startNewGame() {
 
   statusEl.textContent = `基準値は ${baselineValue} です。次の目は大きい？小さい？`;
   awaitingPrediction = true;
-  showPredictionButtons();
   setDieFace(currentDieEl, "?");
   startBtn.disabled = false;
   quitBtn.disabled = false;
+  updateButtonStates();
 }
 
 async function prepareNextRound() {
@@ -253,12 +276,11 @@ async function prepareNextRound() {
   }
 
   awaitingPrediction = false;
-  hideRoundButtons();
   setDieFace(baselineDieEl, baselineValue);
   setDieFace(currentDieEl, "?");
   statusEl.textContent = `基準値は ${baselineValue} です。次の目は大きい？小さい？`;
   awaitingPrediction = true;
-  showPredictionButtons();
+  updateButtonStates();
 }
 
 async function resolvePrediction(choice) {
@@ -267,7 +289,7 @@ async function resolvePrediction(choice) {
   }
 
   awaitingPrediction = false;
-  hidePredictionButtons();
+  updateButtonStates();
   statusEl.textContent = "次の目を振っています...";
 
   const nextValue = rollDie();
@@ -278,7 +300,6 @@ async function resolvePrediction(choice) {
     playFailureSound();
     updateStreak();
     statusEl.textContent = `同じ目が出たのでゲームオーバーです。基準値:${baselineValue} / 次の目:${nextValue}`;
-    hideRoundButtons();
     return;
   }
 
@@ -289,20 +310,21 @@ async function resolvePrediction(choice) {
     playSuccessSound();
 
     if (streak >= 3) {
+      playFanfareSound();
       statusEl.textContent = "3回連続で正解しました！ゲームクリアです。";
-      hideRoundButtons();
+      updateButtonStates();
       return;
     }
 
     statusEl.textContent = `正解です！連続成功は ${streak} 回です。次のゲームに挑戦しますか？`;
-    showRoundButtons();
+    updateButtonStates();
     return;
   }
 
   playFailureSound();
   updateStreak();
   statusEl.textContent = `不正解です。基準値:${baselineValue} / 次の目:${nextValue}`;
-  hideRoundButtons();
+  updateButtonStates();
 }
 
 startBtn.addEventListener("click", () => {

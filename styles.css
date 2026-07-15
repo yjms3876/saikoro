@@ -91,14 +91,14 @@ h1 {
 }
 
 .die.face-unknown {
-  font-size: 4.2rem;
+  font-size: 3.8rem;
   color: #6b7280;
   font-weight: 700;
 }
 
 .die.face-unknown::after {
   content: "?";
-  font-size: 4.2rem;
+  font-size: 3.8rem;
   color: #6b7280;
 }
 
@@ -267,6 +267,14 @@ h1 {
   transform: translateY(-2px);
 }
 
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.75);
+  transform: none;
+  box-shadow: none;
+}
+
 .btn.primary {
   background: #ff4d4d;
   color: #fff;
@@ -284,6 +292,12 @@ h1 {
   background: #22c55e;
   color: #fff;
   box-shadow: 0 4px 0 #15803d;
+}
+
+.btn.choice[data-choice="low"] {
+  background: #facc15;
+  color: #1f2937;
+  box-shadow: 0 4px 0 #b45309;
 }
 
 .hidden {
