@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>どきどきサイコロゲーム</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <h1>どきどきサイコロゲーム</h1>
+
+      <section class="game-panel">
+        <div class="dice-stage" aria-label="サイコロの比較表示">
+          <div class="die-card">
+            <div class="die-label">基準の目</div>
+            <div id="baselineDie" class="die face-unknown" aria-live="polite"></div>
+          </div>
+          <div class="die-card">
+            <div class="die-label">次の目</div>
+            <div id="currentDie" class="die face-unknown" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div id="status" class="status">スタートを押して、最初のサイコロを振ろう。</div>
+        <div class="scoreboard">
+          <span>連続成功: <strong id="streak">0</strong></span>
+        </div>
+
+        <div class="controls">
+          <button id="startBtn" class="btn primary">スタート</button>
+          <button id="quitBtn" class="btn secondary">終わる</button>
+        </div>
+
+        <div id="predictionButtons" class="choice-buttons hidden">
+          <button class="btn choice" data-choice="high">大きい</button>
+          <button class="btn choice" data-choice="low">小さい</button>
+        </div>
+
+        <div id="roundButtons" class="choice-buttons hidden">
+          <button id="nextRoundBtn" class="btn primary">次のゲーム挑戦</button>
+          <button id="stopBtn" class="btn secondary">ここでやめる</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
