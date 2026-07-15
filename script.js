@@ -84,7 +84,7 @@ function playRollSound() {
   oscillator.frequency.exponentialRampToValueAtTime(160, now + 0.16);
 
   gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.16, now + 0.02);
   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
 
   oscillator.connect(filter);
@@ -112,7 +112,7 @@ function playRollingEffect() {
     filter.type = "highpass";
     filter.frequency.value = 700;
     gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.03, startTime + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.06, startTime + 0.015);
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.09);
     oscillator.connect(filter);
     filter.connect(gain);
@@ -136,7 +136,7 @@ function playSuccessSound() {
     oscillator.type = "triangle";
     oscillator.frequency.setValueAtTime(freq, startTime);
     gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.08, startTime + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.16, startTime + 0.03);
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.18);
     oscillator.connect(gain);
     gain.connect(ctx.destination);
@@ -159,7 +159,7 @@ function playFanfareSound() {
     oscillator.type = "triangle";
     oscillator.frequency.setValueAtTime(freq, startTime);
     gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.08, startTime + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.16, startTime + 0.03);
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.24);
     oscillator.connect(gain);
     gain.connect(ctx.destination);
@@ -183,7 +183,7 @@ function playFailureSound() {
     oscillator.frequency.setValueAtTime(freq, startTime);
     oscillator.frequency.exponentialRampToValueAtTime(freq * 0.8, startTime + 0.12);
     gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.06, startTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.12, startTime + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.16);
     oscillator.connect(gain);
     gain.connect(ctx.destination);
