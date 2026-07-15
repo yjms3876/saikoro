@@ -15,8 +15,18 @@ let awaitingPrediction = false;
 let audioContext = null;
 
 function rollDie() {
-  const randomValue = Math.floor(Math.random() * 6) + 1;
-  return randomValue;
+  if (window.crypto && window.crypto.getRandomValues) {
+    const maxRange = 0x100000000;
+    let randomValue;
+    do {
+      const buffer = new Uint32Array(1);
+      window.crypto.getRandomValues(buffer);
+      randomValue = buffer[0];
+    } while (randomValue >= maxRange - (maxRange % 6));
+    return (randomValue % 6) + 1;
+  }
+
+  return Math.floor(Math.random() * 6) + 1;
 }
 
 function evaluatePrediction(baseline, nextValue, prediction) {
@@ -233,8 +243,8 @@ function delay(ms) {
 }
 
 async function animateRoll(dieEl, finalValue) {
-  const steps = 10;
-  const delays = [80, 110, 140, 180, 220, 260, 320, 380, 450, 520];
+  const steps = 12;
+  const delays = [50, 75, 95, 115, 135, 155, 175, 195, 215, 235, 255, 275];
 
   for (let index = 0; index < steps; index += 1) {
     const randomValue = rollDie();
