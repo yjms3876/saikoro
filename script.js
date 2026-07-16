@@ -80,131 +80,61 @@ function ensureAudioContext() {
   return audioContext;
 }
 
-function playRollSound() {
+function playTone(frequency, duration, type = "square", volume = 0.08, delay = 0) {
   const ctx = ensureAudioContext();
   if (!ctx) {
     return;
   }
 
-  const now = ctx.currentTime;
   const oscillator = ctx.createOscillator();
   const gain = ctx.createGain();
-  const filter = ctx.createBiquadFilter();
-  filter.type = "lowpass";
-  filter.frequency.value = 800;
+  const startTime = ctx.currentTime + delay;
 
-  oscillator.type = "triangle";
-  oscillator.frequency.setValueAtTime(420, now);
-  oscillator.frequency.exponentialRampToValueAtTime(220, now + 0.08);
-  oscillator.frequency.exponentialRampToValueAtTime(160, now + 0.16);
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, startTime);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
 
-  gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.16, now + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
-
-  oscillator.connect(filter);
-  filter.connect(gain);
+  oscillator.connect(gain);
   gain.connect(ctx.destination);
-  oscillator.start(now);
-  oscillator.stop(now + 0.18);
+  oscillator.start(startTime);
+  oscillator.stop(startTime + duration);
+}
+
+function playRollSound() {
+  playTone(880, 0.12, "square", 0.05);
+  playTone(660, 0.1, "triangle", 0.04, 0.08);
 }
 
 function playRollingEffect() {
-  const ctx = ensureAudioContext();
-  if (!ctx) {
-    return;
-  }
-
-  const notes = [330, 390, 460, 520];
+  const notes = [520, 610, 700];
   notes.forEach((freq, index) => {
-    const oscillator = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-    const startTime = ctx.currentTime + index * 0.04;
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(freq, startTime);
-    oscillator.frequency.exponentialRampToValueAtTime(freq * 1.02, startTime + 0.06);
-    filter.type = "highpass";
-    filter.frequency.value = 700;
-    gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.06, startTime + 0.015);
-    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.09);
-    oscillator.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-    oscillator.start(startTime);
-    oscillator.stop(startTime + 0.09);
+    playTone(freq, 0.06, "square", 0.025, index * 0.03);
   });
 }
 
 function playSuccessSound() {
-  const ctx = ensureAudioContext();
-  if (!ctx) {
-    return;
-  }
-
-  const notes = [523.25, 659.25, 783.99];
-  notes.forEach((freq, index) => {
-    const oscillator = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const startTime = ctx.currentTime + index * 0.08;
-    oscillator.type = "triangle";
-    oscillator.frequency.setValueAtTime(freq, startTime);
-    gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.16, startTime + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.18);
-    oscillator.connect(gain);
-    gain.connect(ctx.destination);
-    oscillator.start(startTime);
-    oscillator.stop(startTime + 0.18);
-  });
+  playTone(1046.5, 0.1, "triangle", 0.06);
+  playTone(1318.51, 0.12, "square", 0.05, 0.08);
 }
 
 function playFanfareSound() {
-  const ctx = ensureAudioContext();
-  if (!ctx) {
-    return;
-  }
-
-  const notes = [659.25, 783.99, 1046.5, 1318.51];
+  const notes = [784, 988, 1174.66, 1318.51, 1567.98];
   notes.forEach((freq, index) => {
-    const oscillator = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const startTime = ctx.currentTime + 0.25 + index * 0.14;
-    oscillator.type = "triangle";
-    oscillator.frequency.setValueAtTime(freq, startTime);
-    gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.16, startTime + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.24);
-    oscillator.connect(gain);
-    gain.connect(ctx.destination);
-    oscillator.start(startTime);
-    oscillator.stop(startTime + 0.24);
+    playTone(freq, 0.16, "triangle", 0.06, index * 0.1);
+  });
+
+  const fanfareNotes = [1046.5, 1318.51, 1567.98, 1760];
+  fanfareNotes.forEach((freq, index) => {
+    playTone(freq, 0.2, "square", 0.06, 0.7 + index * 0.1);
   });
 }
 
 function playFailureSound() {
-  const ctx = ensureAudioContext();
-  if (!ctx) {
-    return;
-  }
-
-  const notes = [220, 180, 140];
-  notes.forEach((freq, index) => {
-    const oscillator = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const startTime = ctx.currentTime + index * 0.09;
-    oscillator.type = "sawtooth";
-    oscillator.frequency.setValueAtTime(freq, startTime);
-    oscillator.frequency.exponentialRampToValueAtTime(freq * 0.8, startTime + 0.12);
-    gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.12, startTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.16);
-    oscillator.connect(gain);
-    gain.connect(ctx.destination);
-    oscillator.start(startTime);
-    oscillator.stop(startTime + 0.16);
-  });
+  playTone(220, 0.12, "sawtooth", 0.06);
+  playTone(180, 0.1, "sawtooth", 0.05, 0.06);
+  playTone(140, 0.1, "sawtooth", 0.04, 0.12);
 }
 
 function updateStreak() {

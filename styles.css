@@ -1,6 +1,6 @@
 :root {
   color-scheme: dark;
-  font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+  font-family: "Trebuchet MS", "Arial", "Hiragino Sans", "Yu Gothic", sans-serif;
 }
 
 * {
@@ -12,26 +12,55 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, #4aa8ff, #0f4c81 55%, #ff4d4d);
-  color: #fff9d8;
-  padding: 12px;
+  padding: 16px;
+  background:
+    linear-gradient(180deg, #7ec9ff 0%, #4fa6ef 45%, #4b8f2f 45%, #2f6a22 100%);
+  color: #f5f1d0;
+  overflow: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.16) 0 2px, transparent 2px 12px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.1) 0 2px, transparent 2px 16px);
+  mix-blend-mode: screen;
+  opacity: 0.5;
 }
 
 .app {
-  width: min(92vw, 360px);
-  padding: 16px;
-  border-radius: 20px;
-  background: rgba(8, 32, 71, 0.92);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  width: min(92vw, 390px);
+  padding: 18px;
+  border-radius: 10px;
   text-align: center;
-  border: 3px solid #ffd54f;
+  background: linear-gradient(180deg, #a79f87 0%, #7d745d 100%);
+  border: 4px solid #3d2a1b;
+  box-shadow:
+    0 0 0 4px #8b5a2b,
+    0 12px 0 4px #5c3a1d,
+    0 18px 30px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.app::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent 30%, rgba(0,0,0,0.08));
+  pointer-events: none;
 }
 
 h1 {
-  margin: 0 0 8px;
-  font-size: clamp(1.35rem, 5vw, 1.8rem);
-  color: #ffd54f;
-  text-shadow: 2px 2px 0 #d62828, 4px 4px 0 #8b1e1e;
+  margin: 0 0 10px;
+  font-size: clamp(1.2rem, 5vw, 1.7rem);
+  color: #f8ef9e;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 2px 2px 0 #3f2b16, -2px -2px 0 #7a4f1d;
 }
 
 .game-panel {
@@ -55,17 +84,19 @@ h1 {
   align-items: center;
   gap: 6px;
   padding: 10px 12px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid #ffd54f;
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #c8b89d 0%, #8e7852 100%);
+  border: 3px solid #4a2f1d;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.25), inset 0 -2px 0 rgba(0,0,0,0.15);
 }
 
 .die-label {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #ffe082;
-  letter-spacing: 0.02em;
+  color: #fef4c5;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #3d2a1b;
 }
 
 .die {
@@ -74,40 +105,44 @@ h1 {
   position: relative;
   display: grid;
   place-items: center;
-  border-radius: 18px;
-  background: linear-gradient(145deg, #fffef7, #ffcf4b);
-  border: 3px solid #b45309;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28), inset 0 4px 8px rgba(255, 255, 255, 0.8), inset 0 -6px 10px rgba(146, 53, 12, 0.18);
+  border-radius: 8px;
+  background: linear-gradient(145deg, #fff4af 0%, #f2b43a 100%);
+  border: 3px solid #6d3b11;
+  box-shadow:
+    inset 0 3px 0 rgba(255,255,255,0.45),
+    inset 0 -4px 0 rgba(112, 57, 16, 0.3),
+    0 6px 0 rgba(0,0,0,0.2);
   user-select: none;
 }
 
 .die::before {
   content: "";
   position: absolute;
-  inset: 7px;
-  border-radius: 14px;
+  inset: 6px;
+  border-radius: 4px;
   border: 2px solid rgba(0, 0, 0, 0.12);
   pointer-events: none;
 }
 
 .die.face-unknown {
-  font-size: 3.8rem;
-  color: #6b7280;
-  font-weight: 700;
+  font-size: 3.2rem;
+  color: #5f4b2f;
+  font-weight: 800;
 }
 
 .die.face-unknown::after {
   content: "?";
-  font-size: 3.8rem;
-  color: #6b7280;
+  font-size: 3.2rem;
+  color: #5f4b2f;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
 }
 
 .die .pip {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #1f2937;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background: #1f2a1f;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.2);
 }
 
 .die.face-1 {
@@ -116,10 +151,10 @@ h1 {
 }
 
 .die.face-1 .pip {
-  width: 16px;
-  height: 16px;
-  background: #dc2626;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+  width: 14px;
+  height: 14px;
+  background: #d82a2a;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.35);
 }
 
 .die.face-2,
@@ -130,7 +165,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  padding: 20px;
+  padding: 18px;
 }
 
 .die.face-2 .pip:nth-child(1) {
@@ -234,15 +269,17 @@ h1 {
 }
 
 .status {
-  min-height: 40px;
+  min-height: 42px;
   font-size: 0.9rem;
   line-height: 1.4;
-  color: #fff3b0;
+  color: #fff7c8;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
 }
 
 .scoreboard {
   font-size: 0.9rem;
-  color: #ffe082;
+  color: #fef4c5;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
 }
 
 .controls,
@@ -254,13 +291,17 @@ h1 {
 }
 
 .btn {
-  border: 0;
-  border-radius: 999px;
+  border: 3px solid #2d241c;
+  border-radius: 6px;
   padding: 10px 16px;
   font-size: 0.92rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+  position: relative;
 }
 
 .btn:hover {
@@ -268,7 +309,7 @@ h1 {
 }
 
 .btn:disabled {
-  opacity: 0.55;
+  opacity: 0.6;
   cursor: not-allowed;
   filter: grayscale(0.75);
   transform: none;
@@ -276,28 +317,28 @@ h1 {
 }
 
 .btn.primary {
-  background: #ff4d4d;
-  color: #fff;
-  box-shadow: 0 4px 0 #b91c1c;
+  background: linear-gradient(180deg, #ff7a5d 0%, #c94f31 100%);
+  color: #fff8db;
+  box-shadow: 0 4px 0 #7a2c18;
 }
 
 .btn.secondary {
-  background: #3b82f6;
-  color: #f9fafb;
-  box-shadow: 0 4px 0 #1d4ed8;
+  background: linear-gradient(180deg, #6aa4ff 0%, #3e70d8 100%);
+  color: #f9fbff;
+  box-shadow: 0 4px 0 #2248a5;
 }
 
 .btn.choice {
   min-width: 120px;
-  background: #22c55e;
-  color: #fff;
-  box-shadow: 0 4px 0 #15803d;
+  background: linear-gradient(180deg, #74c039 0%, #45932d 100%);
+  color: #fffbe7;
+  box-shadow: 0 4px 0 #245c1a;
 }
 
 .btn.choice[data-choice="low"] {
-  background: #facc15;
-  color: #1f2937;
-  box-shadow: 0 4px 0 #b45309;
+  background: linear-gradient(180deg, #ffc94b 0%, #d89412 100%);
+  color: #3b2b0f;
+  box-shadow: 0 4px 0 #8b5d0e;
 }
 
 .hidden {
