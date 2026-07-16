@@ -15,18 +15,23 @@ let awaitingPrediction = false;
 let audioContext = null;
 
 function rollDie() {
+  const dieFaces = 6;
+
   if (window.crypto && window.crypto.getRandomValues) {
     const maxRange = 0x100000000;
+    const limit = maxRange - (maxRange % dieFaces);
     let randomValue;
+
     do {
       const buffer = new Uint32Array(1);
       window.crypto.getRandomValues(buffer);
       randomValue = buffer[0];
-    } while (randomValue >= maxRange - (maxRange % 6));
-    return (randomValue % 6) + 1;
+    } while (randomValue >= limit);
+
+    return Math.floor((randomValue / limit) * dieFaces) + 1;
   }
 
-  return Math.floor(Math.random() * 6) + 1;
+  return Math.floor(Math.random() * dieFaces) + 1;
 }
 
 function evaluatePrediction(baseline, nextValue, prediction) {
@@ -321,19 +326,19 @@ async function resolvePrediction(choice) {
 
     if (streak >= 3) {
       playFanfareSound();
-      statusEl.textContent = "3回連続で正解しました！ゲームクリアです。";
+      statusEl.textContent = "3回連続で正解！サイコロキング達成です！";
       updateButtonStates();
       return;
     }
 
-    statusEl.textContent = `正解です！連続成功は ${streak} 回です。次のゲームに挑戦しますか？`;
+    statusEl.textContent = `正解！連続成功は ${streak} 回です。次のゲームに挑戦しますか？`;
     updateButtonStates();
     return;
   }
 
   playFailureSound();
   updateStreak();
-  statusEl.textContent = `不正解です。基準値:${baselineValue} / 次の目:${nextValue}`;
+  statusEl.textContent = `残念！基準値:${baselineValue} / 次の目:${nextValue}`;
   updateButtonStates();
 }
 
